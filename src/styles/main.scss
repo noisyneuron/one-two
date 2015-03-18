@@ -1,0 +1,135 @@
+@import 'vendor/normalize';
+@import 'vendor/jeet/index';
+@import 'vendor/animate+animo';
+@import 'vendor/bourbon/bourbon';
+@import 'vendor/colors';
+//@include edit; //show grey grid on browser
+
+html, body { height: 100%; }
+
+body {
+	@include center(100%);
+	font-size: golden-ratio(1em, 0);
+	line-height: golden-ratio(1.25, 0);
+	-webkit-font-smoothing: subpixel-antialiased;
+	* { @include box-sizing(border-box); }
+}
+
+#config {
+	@include center(40%);
+	h1 { 
+		text-align: center; 
+		margin-bottom: golden-ratio(1em, 1);
+	}
+	margin-top: golden-ratio(1em, 4);
+	margin-bottom: golden-ratio(1em, 4);
+	padding: golden-ratio(1em, 2);
+	border: 1px solid black;
+	&.hidden { display: none; }
+}
+
+.field {
+	margin: golden-ratio(1em, 1) 0;
+	@include cf();
+	label {
+		@include col(2/5);
+	}
+	select, input {
+		@include col(3/5);
+		padding: 0 golden-ratio(1em, 0);
+	}
+	input {
+		padding: 0 golden-ratio(1em, -2);
+	}
+	button {
+		@include col(1);
+		border-radius: 5px;
+		-webkit-border-radius: 5px;
+		background-color: $blue;
+		color: $silver;
+		text-align: center;
+		font-size: golden-ratio(1em, 1);
+		margin-top: golden-ratio(1em, 1);
+	}
+}
+
+#game {
+	&.hidden { display: none; }
+	height: 100%;
+	width: 100%;
+}
+
+#hud {
+	height: 65px;
+	@include cf();
+	.score {
+		@include span(1/2);
+		height: 100%;
+		p {
+			text-align: center;
+			color: $white;
+			font-size: golden-ratio(1em, 1);
+			line-height: golden-ratio(1em, 2);
+			margin: 0;
+		}
+		&.p1 { background-color: $blue; }
+		&.p2 { background-color: $yellow; }
+	}
+}
+
+
+#message {
+	height: 40px;
+	background-color: $green;
+	color: $white;
+	text-align: center;
+	vertical-align: middle;
+	display: table-cell;
+	width: 1%; // fucking weird hack
+}
+
+#board-holder {
+	height: calc(100% - 135px);//hud+new-game+message heights
+	width: 100%;
+}
+
+#board {
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	clear: both;
+	.space {
+		border-right: 1px solid black;
+		border-bottom: 1px solid black;
+		position: relative;
+		float: left;
+		@include transition(color, 100ms);
+		&.empty { background-color: $silver; }
+		&.dead { background-color: darken($gray, 20%); }
+		&.owned-1 { background-color: lighten($blue, 20%); }
+		&.owned-2 { background-color: lighten($yellow, 20%); }
+	}
+	.player {
+		width: 60%;
+		height: 60%;
+		margin-left: 20%;
+		margin-top: 20%;
+		&#p1 { background-color: darken($blue, 10%); }
+		&#p2 { background-color: darken($yellow, 10%); }
+	}
+}
+
+#new-game {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+	background-color: $gray;
+	border: none;
+	color: $black;
+	height: 30px;
+	&:hover {
+		background-color: $black;
+		color: $gray;
+	}
+}
+

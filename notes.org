@@ -1,0 +1,107 @@
+OneTwo, UI, Driver
+
+driver as inbetween? controller?
+
+UI tells driver options to start new game
+driver tell onetwo options
+onetwo tells driver when its done and gives it a board
+driver tells UI to update board
+
+driver either waits for ui click or gets a move from the bot - waits for toggle turn, and responds accordingly
+driver tells onetwo to move
+onetwo tells driver when move is done, along with some info
+driver tells ui to update board
+
+
+
+
+Abstractions...
+Board can be its own unit (would be useful for creating boards later)
+Bot module - gives move for player based on board
+One-two module - holds game state, turns, etc. throws events. allows for starting game and making move. gives copy of game state to whoever asks
+Player module? 
+
+abstraction should be for local two player, local player-computer, computer-computer in bulk with stats, sockets 2-player... 
+
+player abstracted, and some messaging system abstracted. messaging /  event system. include sockets in at the end. 
+
+
+So, same way that players over socket will get messages and post messages, bot can be the same
+not requiring sucha  sequential driver then
+
+flow can be managed by events, as it should be.. 
+
+so there are certain kind of 'agents' or 'entities' that can pub and sub to events
+
+- player (bot is a type of player)
+- game or game state 
+- event handler, mediator..
+- interface (ui - and cli?)
+
+Interface features: 
+- choose type of game / options
+- start game
+- listen to events and update GUI (listening could result in asking for a move and throwing new event.)
+(bot interactivity is something like interacting from cli)
+
+
+
+
+1. basic menu screen (dom or cli) - size/dead options, type of game option - 2 humans same location, 2 humans socket, human vs computer, computer vs computer 
+2. game screen . if socket , if waiting show waiting, otherwise show 'connecting...' / 'joining...' if needed. 
+if computer vs computer ? save file stats to disk? this should only be done on CLI..
+
+
+ THinking in terms of events, (event mediator _is_ the driver/controller)
+
+ ONe-two listens for start-game event that comes with config data
+ one-two throws new-game event with game state
+ view/ui/cli listens for new-game and outputs appropriately 
+ view/ui/cli throws game-started event 
+ Player 1 listens for game-started event, (and listen for clicks on board...? UI and Player have to interact somehow)
+ player 1 throws move-made event with coords
+
+
+
+ one-two listens for move-event 
+
+
+If bot is type of player as well, 
+player waits for toggle turn, and then throws event with move data...
+to throw this event, 
+
+hmmmm confusing with client-server interaction as well. earlier game was all client. now some on server.. 
+so if using socket, can have server only speak back to client for for game on 1 browser window, and make pairings for two clietns as required.. 
+comp vs comp? not avaialbe through browser.. create CLI for this. might not be a bad place to start? 
+
+IS THIS BECOMING TOO COMPLICATED AGAIN? WILL THERE BE HUNDEREDS OF IF_THENS TRYING TO DEAL WITH ALL OF THIS AT SAME TIME?
+
+save sockets for later. keep in mind and implment later
+
+FOR NOW: 
+make it playable again, everything client side
+allow settings and vs computer
+make computer logic
+
+
+
+Usefulness of abstraction:
+- UI becomes a module, can change look easily
+- Game itself can be changed keeping event and flow structure intact
+- using turn-toggled event, can have game with more players
+
+
+
+
+
+25th September
+
+-- sort out score functionality
+-- make some sort of messaging scheme -- can make all DOM events emit custom events for consistency
+-- finish handling events for human using window as event listener
+
+
+
+
+
+
