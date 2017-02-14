@@ -52,10 +52,9 @@ var browserify_shim = {
     path: String(vendor_dir + "lodash-2.4.1.min.js"),
     exports: '_'
   },
-  animo: {
-    path: String(vendor_dir + "animo.js"),
-    exports: 'animo',
-    depends: { jquery: '$' }
+  statemachine: {
+    path: String(vendor_dir + "state-machine.js"),
+    exports: 'StateMachine'
   },
 };
 
@@ -121,7 +120,8 @@ gulp.task('images', function () {
 gulp.task('default', ['templates', 'images', 'styles', 'scripts', 'vendor-scripts', 'html5shiv', 'browser-sync'], function () {
   gulp.watch("src/**/*.jade", ['templates']);
   gulp.watch("src/styles/**/*.scss", ['styles']);
-  gulp.watch("src/scripts/**/*.js", ['scripts']);
+  gulp.watch("src/scripts/*.js", ['scripts']);
+  gulp.watch("src/scripts/vendor/*.js", ['vendor-scripts']);
   gulp.watch("src/images/**/*", ['images']);
 });
 /* ================== END TASKS FOR DEV MODE ================*/

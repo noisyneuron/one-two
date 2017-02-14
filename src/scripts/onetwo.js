@@ -109,6 +109,13 @@ var OneTwo = function () {
     return availableMoves;
   }
 
+  var _checkCycle = function(player) {
+    var isCycle = true, justVisited = [];
+    if(_gameState[_player(player).position.x][_player(player).position.y] === _state.owned(player)) {
+      
+    }
+  }
+
   var newGame = function (options) {
     var i = 0, prop, x, y;
     // Overwrite options if they exist

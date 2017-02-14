@@ -14,29 +14,9 @@ var UI = function () {
     dom_players: ".player",
     dom_p1score: ".score.p1 p",
     dom_p2score: ".score.p2 p",
+    dom_formBoard: "select#boardType",
+    dom_randomBoard: ".field.toggleable"
   };
-
-
-
-
-  var _handleForm = function(e) {
-    var form = $(this).parents("form");
-    var settings = {
-      boardSize: parseInt(form.find("#size").val()),
-      deadSpaces: parseInt(form.find("#dead").val()),
-      p1: form.find("#p1").val(),
-      p2: form.find("#p2").val()
-    };
-    $(window).trigger("ui-start-game", [settings]);
-  };
-
-  var _handleMove = function(e) {
-    var coords = {
-      x: $(this).attr('data-x'),
-      y: $(this).attr('data-y')
-    };
-    $(window).trigger("ui-move", [coords]);
-  }
 
   var _setBoardSize = function (gridLength) {
     var boardHolder = $(_selectors.dom_boardHolder),
@@ -56,25 +36,8 @@ var UI = function () {
   };
 
 
-  var _toggleForm = function(e) {
-    if($(_selectors.dom_config).hasClass("hidden")) {
-      var sure = confirm("Are you sure you want to start a new game?");
-      if(sure) {
-        $(_selectors.dom_config).removeClass("hidden");
-        $(_selectors.dom_game).addClass("hidden");
-        $(_selectors.dom_space).off("click");
-        $(_selectors.dom_newGame).off("click");
-        $(_selectors.dom_board).empty();
-      }
-    } else {
-      $(_selectors.dom_config).addClass("hidden");
-      $(_selectors.dom_game).removeClass("hidden");
-    }
-  };
-
-
   var initialiseBoard = function (gameState) {
-    _toggleForm();
+    toggleForm();
     var board = $(_selectors.dom_board),
       size = gameState.length,
       x,
@@ -100,12 +63,17 @@ var UI = function () {
     _setBoardSize(size);
     $(_selectors.dom_space).css({"height" : String((100 / size) + "%"), "width" : String((100 / size) + "%")});
 
-    $(_selectors.dom_space).on("click", _handleMove);
-    $(_selectors.dom_newGame).on("click", _toggleForm);
+
+    $(_selectors.dom_newGame).on("click", function() {
+      var sure = confirm("Are you sure you want to start a new game?");
+      if(sure) {
+        $(window).trigger('ui-restart-game');
+      }
+    });
 
   };
 
-  var updateBoard = function (gameState, players) {
+  var updateBoard = function (gameState, players, cb) {
 
     for (x = 0; x < gameState.length; x++) {
       for (y = 0; y < gameState.length; y++) {
@@ -127,14 +95,14 @@ var UI = function () {
     }
 
     $(_selectors.dom_players).remove();
+    $('.space[data-x="' + players[1].position.x + '"][data-y="' + players[1].position.y + '"]').append("<div class='player' id='p1'></div>");
+    $('.space[data-x="' + players[2].position.x + '"][data-y="' + players[2].position.y + '"]').append("<div class='player' id='p2'></div>");
 
-    $('.space[data-x="' + players.p1.position.x + '"][data-y="' + players.p1.position.y + '"]').append("<div class='player' id='p1'></div>");
-    $('.space[data-x="' + players.p2.position.x + '"][data-y="' + players.p2.position.y + '"]').append("<div class='player' id='p2'></div>");
-
-    $(_selectors.dom_p1score).text(players.p1.score);
-    $(_selectors.dom_p2score).text(players.p2.score);
-
+    $(_selectors.dom_p1score).text(players[1].score);
+    $(_selectors.dom_p2score).text(players[2].score);
+    cb();
   };
+
 
 
   var setMessage = function(msg) {
@@ -145,13 +113,61 @@ var UI = function () {
     $(_selectors.dom_message).text(m);
   }
 
-  var endGame = function() {
-    $(_selectors.dom_space).off('click');
+
+  var _handleMove = function(e) {
+    var coords = {
+      x: parseInt($(this).attr('data-x')),
+      y: parseInt($(this).attr('data-y'))
+    };
+    $(window).trigger("ui-move", [coords]);
+  }
+
+  var bindBoard = function() {
+    $(_selectors.dom_space).on("click", _handleMove);
+  }
+
+   var unbindBoard = function() {
+    $(_selectors.dom_space).off("click");
   }
 
 
+  var _handleForm = function(e) {
+    var form = $(this).parents("form");
+    var settings = {
+      boardType: form.find("#boardType").val(),
+      boardSize: parseInt(form.find("#size").val()),
+      deadSpaces: parseInt(form.find("#dead").val()),
+      p1: form.find("#p1").val(),
+      p2: form.find("#p2").val()
+    };
+    $(window).trigger("ui-start-game", [settings]);
+  };
+
+  var toggleForm = function() {
+    if($(_selectors.dom_config).hasClass("hidden")) {
+      $(_selectors.dom_config).removeClass("hidden");
+      $(_selectors.dom_game).addClass("hidden");
+      $(_selectors.dom_space).off("click");
+      $(_selectors.dom_newGame).off("click");
+      $(_selectors.dom_board).empty();
+    } else {
+      $(_selectors.dom_config).addClass("hidden");
+      $(_selectors.dom_game).removeClass("hidden");
+    }
+  };
+
+  // toggle visibility of size & deadSpace fields
+  $(_selectors.dom_formBoard).on("change", function() {
+    var val = $(_selectors.dom_formBoard).val();
+    if(val === "random") {
+      $(_selectors.dom_randomBoard).show();
+    } else {
+      $(_selectors.dom_randomBoard).hide();
+    }
+  })
 
   $(_selectors.dom_startGame).on("click", _handleForm);
+
 
   $(window).on("resize", function () {
     _setBoardSize(Math.sqrt($(_selectors.dom_space).length));
@@ -161,10 +177,12 @@ var UI = function () {
   return {
     initialiseBoard: initialiseBoard,
     updateBoard: updateBoard,
+    bindBoard: bindBoard,
+    unbindBoard: unbindBoard,
     setMessage: setMessage,
-    endGame: endGame
+    toggleForm: toggleForm
   };
-}();
+}($);
 
 module.exports = UI;
 

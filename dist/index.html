@@ -8,45 +8,46 @@
     <form id="config">
       <h1>ONE:TWO</h1>
       <div class="field">
-        <label for="size">Board size: </label>
-        <select id="size">
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8" selected>8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="dead">Dead spaces:</label>
-        <input id="dead" type="text" value="16">
-      </div>
-      <div class="field">
         <label for="p1">Player One (Blue):</label>
         <select id="p1">
           <option value="human" selected>Human </option>
-          <option value="computer">Computer </option>
+          <option value="computer" disabled>Computer </option>
         </select>
       </div>
       <div class="field">
         <label for="p2">Player Two (Yellow):</label>
         <select id="p2">
           <option value="human" selected>Human </option>
-          <option value="computer">Computer </option>
+          <option value="computer" disabled>Computer </option>
         </select>
+      </div>
+      <div class="field">
+        <label for="boardType">Board: </label>
+        <select id="boardType">
+          <option value="8x8_1">Board 1 - 8x8 </option>
+          <option value="8x8_2">Board 2 - 8x8</option>
+          <option value="8x8_3">Board 3 - 8x8</option>
+          <option value="random" selected>Random board</option>
+        </select>
+      </div>
+      <div class="field toggleable">
+        <label for="size">Size:</label>
+        <input id="size" type="text" value="6">
+      </div>
+      <div class="field toggleable">
+        <label for="dead">Dead spaces:</label>
+        <input id="dead" type="text" value="12">
       </div>
       <div class="field">
         <button id="start-game" type="button">Play</button>
       </div>
+      <p class="instructions">
+        <br>RULES <br><br>
+        -- Players move like knights/horses in chess, colouring each square they jump to in their colour. --<br><br>
+        -- Squares coloured gray are not accessible to either player. --<br><br>
+        -- A player can always step back on his/her colour, but stepping on the opponent's colour will make that space unusable to both players. --<br><br>
+        -- The game ends when one (or both) players are trapped, or if the board fills up. The player with more squares in their color (ie with a higher score) wins. --
+      </p>
     </form>
     <div id="game" class="hidden">
       <div id="hud">

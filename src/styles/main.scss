@@ -16,12 +16,13 @@ body {
 }
 
 #config {
-	@include center(40%);
+	@include center(60%);
+	max-width: 740px;
 	h1 { 
 		text-align: center; 
 		margin-bottom: golden-ratio(1em, 1);
 	}
-	margin-top: golden-ratio(1em, 4);
+	margin-top: golden-ratio(1em, 1);
 	margin-bottom: golden-ratio(1em, 4);
 	padding: golden-ratio(1em, 2);
 	border: 1px solid black;
@@ -40,6 +41,7 @@ body {
 	}
 	input {
 		padding: 0 golden-ratio(1em, -2);
+		padding-top: 2px;
 	}
 	button {
 		@include col(1);
@@ -51,8 +53,13 @@ body {
 		font-size: golden-ratio(1em, 1);
 		margin-top: golden-ratio(1em, 1);
 	}
+	&.toggleable {  }
 }
 
+.instructions {
+	text-align: center;
+	line-height: 1.5;
+}
 #game {
 	&.hidden { display: none; }
 	height: 100%;

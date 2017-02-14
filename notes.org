@@ -104,4 +104,56 @@ Usefulness of abstraction:
 
 
 
+march 19th
+
+- turn management can be taken out of onetwo.js and handled by the driver - mainjs
+  then events should be thrown by player and bot to say turn ended -- state machine
+- players could have their own class and be instantiated in main.js as human / computer 
+- util class for getting players / other player / copy / state
+- logging 
+- pre-created boards
+
+
+for game end, need solution for endless loops - shouldnt return true for almsot trapped / trapped
+detecting loop upto some depth, given board state and player  ->
+pos(i) -> start_pos  ---- push into justVisited array
+if availableMoves all owned by me
+and max of 1 available moves that is not in list of just-visited 
+
+checkCycle(board, playerpos, depth) ->
+  isCycle = true
+  if currentPos is owned by me 
+    justVisited <- currentPos
+    loop(board, playerpos, depth) ->
+      if hasUnownedAvailableMoves or hasNoMoves
+        return false
+      else
+        foreach ownedAvailableMove m
+          if otherPlayerPos is in horseMoves(board+m, playe@m) 
+            && otherPlayerPos.state is owned(otherPlayer)
+            return false
+          else
+            newmoves = availableMoves(board+m, playe@m) - justVisited
+            if newmoves.length == 0
+              return true
+            else 
+              justVisited <- m (if doesnt already exist)
+              isCycle = icCyle && loop(board+m, playe@m, depth-1)
+        return isCycle
+// NEEDS TO ACCOUNT FOR OTHER PERSON MOVING AWAY.......   
+    so in loop, "allAvailableMoves" includes place where other player is 
+
+
+
+(USE CUSTOM BOARDS TO CHECK THIS - first put in that logic)
+
+AI
+
+- space can either give +1 or 0
+- space is better if it has multiple high scoring options leading out of it ?
+- choose space that has minimum options out of it (knights tour algo)
+- need to prevent endless cycling loops... 
+
+
+
 

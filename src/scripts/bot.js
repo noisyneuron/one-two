@@ -96,6 +96,26 @@ var Bot = function () {
     return unVisited[bestIndex];
   }
 
+
+  var _evaluateMoveSimple = function(board, player, move) {
+    var space = board[move.x][move.y], weight;
+    if( (space === _state.empty) ||
+        (space === _state.owned(1) && player === 2) ||
+        (space === _state.owned(2) && player === 1) )
+    {
+      weight = 1;
+    } else {
+      weight = 0;
+    }
+    return weight;
+  }
+
+  var _negamax = function (board, player, players) {
+
+  }
+
+
+
   var setType = function (type) {
     if (type !== "random" && type !== "mostOpenPath" ) {
       throw String("Bot cannot be of type: " + type);

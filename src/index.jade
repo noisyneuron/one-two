@@ -8,38 +8,36 @@ html
 		form#config
 			h1 ONE:TWO
 			.field
-				label(for="size") Board size: 
-				select#size
-					option(value="5") 5
-					option(value="6" ) 6
-					option(value="7") 7
-					option(value="8" selected) 8
-					option(value="9") 9
-					option(value="10") 10
-					option(value="11") 11
-					option(value="12") 12
-					option(value="13") 13
-					option(value="14") 14
-					option(value="15") 15
-					option(value="16") 16
-					option(value="17") 17
-					option(value="18") 18
-			.field
-				label(for="dead") Dead spaces:
-				input#dead(type="text" value="16")
-			.field
 				label(for="p1") Player One (Blue):
 				select#p1
 					option(value="human" selected) Human 
-					option(value="computer") Computer 
+					option(value="computer" disabled) Computer 
 			.field
 				label(for="p2") Player Two (Yellow):
 				select#p2
 					option(value="human" selected) Human 
-					option(value="computer") Computer 
+					option(value="computer" disabled) Computer 
+			.field
+				label(for="boardType") Board: 
+				select#boardType
+					option(value="8x8_1" ) Board 1 - 8x8 
+					option(value="8x8_2" ) Board 2 - 8x8
+					option(value="8x8_3") Board 3 - 8x8
+					option(value="random" selected) Random board
+			.field.toggleable
+				label(for="size") Size:
+				input#size(type="text" value="6")
+			.field.toggleable
+				label(for="dead") Dead spaces:
+				input#dead(type="text" value="12")
 			.field
 				button(id="start-game" type="button") Play
-
+			p.instructions
+				| <br>RULES <br><br>
+				| -- Players move like knights/horses in chess, colouring each square they jump to in their colour. --<br><br>
+				| -- Squares coloured gray are not accessible to either player. --<br><br>
+				| -- A player can always step back on his/her colour, but stepping on the opponent's colour will make that space unusable to both players. --<br><br>
+				| -- The game ends when one (or both) players are trapped, or if the board fills up. The player with more squares in their color (ie with a higher score) wins. --
 
 		#game.hidden
 			#hud
