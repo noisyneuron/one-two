@@ -51,7 +51,9 @@ var enteringTurn = function() {
 		if(players[currentTurn].type === "human") {
 			ui.bindBoard(); //add click event listener
 		} else { //p1 is computer
-			fsm.validMove(players[currentTurn].bot.getMove(board, players, currentTurn));
+			var m = players[currentTurn].bot.getMove(board, currentTurn, players);
+			// console.log(m);
+			fsm.validMove(m);
 		}
 	}
 };

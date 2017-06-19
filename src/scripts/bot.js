@@ -1,6 +1,9 @@
+var util = require("./util.js");
+var game = require("./gamelogic.js");
+
 var Bot = function () {
   var _config = {
-    type: "mostOpenPath"
+    type: "minimax"
   };
 
   // Hash for referencing various states for board spaces
@@ -16,10 +19,12 @@ var Bot = function () {
   };
 
   var _getAvailableMoves = function (board, player, players) {
+    // console.log(player);
+    // console.log(players);
     // hardcoded computer to always be player 2 for now, change later
     var availableMoves = [], 
-      currentPlayerPos = player === 1 ? players["p1"].position : players["p2"].position, 
-        otherPlayerPos = player === 1 ? players["p2"].position : players["p1"].position, 
+      currentPlayerPos = player === 1 ? players["1"].position : players["2"].position, 
+        otherPlayerPos = player === 1 ? players["2"].position : players["1"].position, 
         i;
 
     var horseMoves = [
@@ -59,7 +64,7 @@ var Bot = function () {
     var unVisited = availableMoves.filter(function(el, index){
       return board[availableMoves[index].x][availableMoves[index].y] !== _state.owned(2)
     });
-    console.log(unVisited);
+    // console.log(unVisited);
     if(unVisited.length === 0) unVisited = availableMoves;
     
 
@@ -92,7 +97,7 @@ var Bot = function () {
         bestIndex = i;
       }
     }
-    console.log("BOT: " + unVisited[bestIndex]);
+    // console.log("BOT: " + unVisited[bestIndex]);
     return unVisited[bestIndex];
   }
 
@@ -110,10 +115,56 @@ var Bot = function () {
     return weight;
   }
 
-  var _negamax = function (board, player, players) {
-
+  // evaluate different from currentPlayer's perspective
+  var _evaluateDifference = function(currentPlayer, players) {
+    var otherPlayer = currentPlayer === 1 ? 2 : 1;
+    return players[currentPlayer].score - players[otherPlayer].score;
   }
 
+  // state is too distributed currently - players holding their own score instead of 
+  // it being carried in main game state
+  // need to have access to gamelogic here to make 'move'
+  // move already coded to deep copy so safe to make hypothetical moves and get
+  // board and players updates 
+  var _minimax = function (board, currentPlayer, players, depth, isMax) { // need maximisingPlayer in params too 
+    
+    var moves = game.availableMoves(board, players, currentPlayer);
+
+    if(depth === 0 || moves.length == 0) {
+      return  {
+        score: _evaluateDifference(currentPlayer, players),
+        move: {}
+      }
+    }
+    
+    
+    
+    if(isMax) {
+      var toReturn = {score: -9999, move: {}};
+      for(var i=0; i<moves.length; i++) {
+        var newstate = game.move(board, players, currentPlayer, moves[i]);
+        // console.log(" NEW STATE ");
+        // console.log(newstate);
+        var evaled = _minimax(newstate.board, util.otherTurn(currentPlayer), newstate.players,  depth-1, false);
+        if(evaled.score > toReturn.score) {
+          toReturn.score = evaled.score;
+          toReturn.move = moves[i];
+        }        
+      }
+      return toReturn;
+    } else {
+      var toReturn = {score: 9999, move: {}};
+      for(var i=0; i<moves.length; i++) {
+        var newstate = game.move(board, players, currentPlayer, moves[i]);
+        var evaled = _minimax(newstate.board, util.otherTurn(currentPlayer), newstate.players,  depth-1, true);
+        if(evaled.score < toReturn.score) {
+          toReturn.score = evaled.score;
+          toReturn.move = moves[i];
+        }        
+      }
+      return toReturn;
+    }
+  }
 
 
   var setType = function (type) {
@@ -124,7 +175,10 @@ var Bot = function () {
     return false;
   };
 
+
+
   var getMove = function (board, player, players) {
+
     // BOT WILL NEED TO KNOW PLAYER POSITIONS AS WELL.. REFACTOR THIS SOMEHOW?
     var move;
     console.log(_config.type);
@@ -134,6 +188,11 @@ var Bot = function () {
       break;
     case "mostOpenPath" :
       move = _mostOpenPath(board, player, players);
+      break;
+    case "minimax" :
+      var m = _minimax(board, 2, players, 6, true);
+      // console.log(m.move);
+      move = m.move;
       break;
     default:
       move = undefined;

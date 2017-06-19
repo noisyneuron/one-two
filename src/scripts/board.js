@@ -26,7 +26,7 @@ var Board = function() {
 		],
 		'8x8_3' : [
 			[is.owned(1), is.empty, is.dead, is.empty, is.empty, is.dead, is.dead, is.empty], 
-			[is.dead, is.empty, is.empty, is.empty, is.dead, is.empty, is.empty, is.dead], 
+			[is.dead,  is.empty, is.empty, is.empty, is.dead, is.empty, is.empty, is.dead], 
 			[is.empty, is.empty, is.empty, is.empty, is.dead, is.empty, is.empty, is.empty], 
 			[is.empty, is.empty, is.empty, is.empty, is.empty, is.empty, is.dead, is.empty], 
 			[is.empty, is.dead, is.empty, is.empty, is.empty, is.empty, is.empty, is.empty], 

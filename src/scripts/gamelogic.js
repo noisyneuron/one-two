@@ -32,26 +32,32 @@ var GameLogic = function() {
 		    !(move.x === otherPlayer.x && move.y === otherPlayer.y));
 	};
 
+	
+	// (position) -> [{x,y},...]
+	// returns all possible horse moves
+	var getHorseMoves = function(position) {
+		return [
+		  { x: position.x - 2, y: position.y - 1 },
+		  { x: position.x - 2, y: position.y + 1 },
+		  { x: position.x - 1, y: position.y - 2 },
+		  { x: position.x - 1, y: position.y + 2 },
+		  { x: position.x + 2, y: position.y - 1 },
+		  { x: position.x + 2, y: position.y + 1 },
+		  { x: position.x + 1, y: position.y - 2 },
+		  { x: position.x + 1, y: position.y + 2 }
+		];
+	}
 
 	// (board[][], {1,2}, int) -> [{x,y},...]
 	// returns all possible valid moves on board
 	var availableMoves = function(board, players, currentTurn) {
-		console.log(currentTurn);
+		// console.log(currentTurn);
 		var currentPlayerPos = players[currentTurn].position, 
 					otherPlayerPos = players[util.otherTurn(currentTurn)].position, 
 					allMoves = [], 
 					i;
 
-		var horseMoves = [
-		  { x: currentPlayerPos.x - 2, y: currentPlayerPos.y - 1 },
-		  { x: currentPlayerPos.x - 2, y: currentPlayerPos.y + 1 },
-		  { x: currentPlayerPos.x - 1, y: currentPlayerPos.y - 2 },
-		  { x: currentPlayerPos.x - 1, y: currentPlayerPos.y + 2 },
-		  { x: currentPlayerPos.x + 2, y: currentPlayerPos.y - 1 },
-		  { x: currentPlayerPos.x + 2, y: currentPlayerPos.y + 1 },
-		  { x: currentPlayerPos.x + 1, y: currentPlayerPos.y - 2 },
-		  { x: currentPlayerPos.x + 1, y: currentPlayerPos.y + 2 }
-		];
+		var horseMoves = getHorseMoves(currentPlayerPos);
 
 		for (i = 0; i < horseMoves.length; i++) {
 		  var move = horseMoves[i];
@@ -84,6 +90,28 @@ var GameLogic = function() {
 			return (availableMoves(board,players,turnId).length === 0) &&
 							(!movablePlayerInWay(board, players, turnId))
 		}
+	}
+
+	
+	// (board[][]) -> BOOL
+	// checks is available spaces are unreachable
+	// NEEDS WORK - could be two or more connected spaces that are all unreachable
+	var _boardInaccesible = function(board) {
+		var inaccesible = false;
+		for (x = 0; x < board.length; x++) {
+		  for (y = 0; y < board.length; y++) {
+		    if(board[x][y] === util.state.empty) {
+		      var moves = getHorseMoves({x: x, y: y});
+		      for(var m = 0; m<moves.length; m++) {
+		      	if(isInBounds(board, moves[i]) && board[m.x][m.y] == util.state.empty) {
+		      		inaccesible = true;
+		      	}
+		      }
+		      break;
+		    }
+		  }
+		}
+		return inaccesible;
 	}
 
 	// (board[][]) -> BOOL
