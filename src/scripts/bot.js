@@ -116,6 +116,7 @@ var Bot = function () {
   }
 
   // evaluate different from currentPlayer's perspective
+  // need to take game end conditions into account
   var _evaluateDifference = function(currentPlayer, players) {
     var otherPlayer = currentPlayer === 1 ? 2 : 1;
     return players[currentPlayer].score - players[otherPlayer].score;
